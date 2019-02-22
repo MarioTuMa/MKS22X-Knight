@@ -146,61 +146,35 @@ public boolean solve(int lastkx, int lastky){
     }
 }
 
+  public int countSolutions(int so_far, int lastkx, int lastky){
+    if(knight_counter == board.length * board[0].length){
 
-  //private boolean backtrack(){
-    //   int last_q_index = -1;
-    //   if(queen_counter !=0){
-    //     for(int i = 0; i < board.length; i ++){
-    //
-    //       if(board[queen_counter - 1][i] == -1){
-    //         last_q_index = i;
-    //       }
-    //
-    //     }
-    //     removeQueen(queen_counter-1,last_q_index);
-    //   }
-    //   else{
-    //     return false;
-    //   }
-    //   boolean didnt_do_stuff = true;
-    //
-    //   for(int i = last_q_index + 1; i < board.length; i ++){
-    //     if(board[queen_counter][i]==0){
-    //       addQueen(queen_counter,i);
-    //       didnt_do_stuff = false;
-    //       return true;
-    //     }
-    //   }
-    //   if(didnt_do_stuff){
-    //     return backtrack();
-    //   }
-    //   if(last_q_index == -1){
-    //     return false;
-    //   }
-    //   else{
-    //     return false;
-    //   }  }
-  //
-  // public int countSolutions(){
-  //   int counter =0;
-  //   if(solve()){
-  //     counter++;
-  //   };
-  //   while(backtrack()){
-  //     if(solve()){
-  //       counter++;
-  //       //System.out.println(counter);
-  //     }
-  //   }
-  //
-  //   return counter;
-  // }
+      return 1;
+
+    }
+
+    else{
+
+      int[][] options = {{2,1},{2,-1},{-2,-1},{-2,1},{1,2},{-1,2},{1,-2},{-1,-2}};
+
+      for(int i=0;i<options.length;i++){
+        if(addKnight(lastkx + options[i][0], lastky + options[i][1])){
+
+          so_far += countSolutions(0,lastkx + options[i][0], lastky + options[i][1]);
+
+          removeKnight(lastkx + options[i][0], lastky + options[i][1]);
+        }
+      }
+      return so_far;
+    }
+  }
 
  public static void main(String args[]){
-    KnightsTour nb = new KnightsTour(6,5);
+    KnightsTour nb = new KnightsTour(5,5);
     // note that the way I wrote solve, you must add the start knight and then run solve
     nb.addKnight(0,0);
-    nb.solve(0,0);
+    System.out.println(nb.countSolutions(0,0,0));
+
     System.out.println(nb.toString());
 
   }
