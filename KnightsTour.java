@@ -1,4 +1,7 @@
 import java.util.*;
+import java.util.Arrays;
+
+
 public class KnightsTour{
 
     private KnightSquare[][] board;
@@ -12,6 +15,7 @@ public class KnightsTour{
     for(int i = 0; i < rows; i ++){
       for(int j = 0; j < cols; j ++){
         board[i][j]=new KnightSquare(i,j);
+        board[i][j].setSpacesLeft(8);
         if(Math.abs(rows - i)==2 || i==1){
           board[i][j].setSpacesLeft(6);
         }
@@ -44,6 +48,7 @@ public class KnightsTour{
   private boolean addKnight(int row, int col){
     if (row<0 || row>=board.length || col <0 || col>=board[0].length) {
       return false;
+
     }
     if(board[row][col].order==0){
       knight_counter++;
@@ -86,11 +91,19 @@ public class KnightsTour{
     String to_return = "";
     for(int i = 0; i < board.length; i ++){
       for(int j = 0; j < board[0].length; j ++){
-          to_return += board[i][j].order;
-          if(board[i][j].order<10){
-            to_return += " ";
-          }
-          to_return += "|";
+        if(board[i][j].order<10){
+          to_return += " ";
+        }
+        if(board[i][j].order<100){
+          to_return += " ";
+        }
+        if(board[i][j].order<1000){
+          to_return += " ";
+        }
+        to_return += board[i][j].order;
+
+        to_return += "|";
+
       }
       to_return = to_return+"\n";
     }
@@ -102,19 +115,24 @@ public boolean compare(int[] opt1, int[] opt2, int lastkx, int lastky){
     return false;
   }
   if(lastkx+opt2[0]>board.length-1 || lastkx+opt2[0]<0 || lastky+opt2[1]>board[0].length-1 || lastky+opt2[1]<0){
+    //System.out.println("case 1");
     return true;
   }
   if(board[lastkx+opt1[0]][lastky+opt1[1]].order>0){
     return false;
   }
   if(board[lastkx+opt2[0]][lastky+opt2[1]].order>0){
+    //System.out.println("case 2");
     return true;
   }
+  // System.out.println("case 3");
+  // System.out.println(board[lastkx+opt1[0]][lastky+opt1[1]].spaces_left);
+  // System.out.println(board[lastkx+opt2[0]][lastky+opt2[1]].spaces_left);
   return (board[lastkx+opt1[0]][lastky+opt1[1]].spaces_left<board[lastkx+opt2[0]][lastky+opt2[1]].spaces_left);
 }
 
 public int[][] sort(int[][] options, int lastkx,int lastky){
-  for(int i=1;i<options.length;i++){
+  for(int i=0;i<options.length;i++){
     for(int j=0;j<i;j++){
       if(compare(options[i],options[j],lastkx,lastky)){
         int[] temp=options[i];
@@ -126,6 +144,12 @@ public int[][] sort(int[][] options, int lastkx,int lastky){
   return options;
 }
 public boolean solve(int lastkx, int lastky){
+
+
+  if(knight_counter==0){
+    addKnight(lastkx,lastky);
+    return solve(lastkx,lastky);
+  }
   //System.out.println(toString());
   if(knight_counter == board.length * board[0].length){
     return true;
@@ -134,6 +158,10 @@ public boolean solve(int lastkx, int lastky){
   else{
     int[][] options = {{2,1},{2,-1},{-2,-1},{-2,1},{1,2},{-1,2},{1,-2},{-1,-2}};
     options=sort(options,lastkx,lastky);
+    if(board[options[0][0]+lastkx][options[0][1]+lastky].spaces_left==0){
+      return false;
+    }
+
     for(int i=0;i<options.length;i++){
       if(addKnight(lastkx + options[i][0], lastky + options[i][1])){
         if(solve(lastkx + options[i][0], lastky + options[i][1])){
@@ -170,10 +198,10 @@ public boolean solve(int lastkx, int lastky){
   }
 
  public static void main(String args[]){
-    KnightsTour nb = new KnightsTour(5,5);
-    // note that the way I wrote solve, you must add the start knight and then run solve
-    nb.addKnight(0,0);
-    System.out.println(nb.countSolutions(0,0,0));
+    KnightsTour nb = new KnightsTour(4,4);
+
+
+    System.out.println(nb.solve(0,0));
 
     System.out.println(nb.toString());
 
