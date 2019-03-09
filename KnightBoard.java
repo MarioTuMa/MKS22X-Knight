@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.Arrays;
 
 
-public class KnightsTour{
+public class KnightBoard{
 
     private KnightSquare[][] board;
     private int knight_counter = 0;
@@ -10,7 +10,7 @@ public class KnightsTour{
   public static boolean attacks(int row1, int col1, int row2, int col2){
     return (1==(col1 - col2) && 2 == Math.abs(row1 - row2)) || (1==(row1 - row2) && 2 == Math.abs(col1 - col2));
   }
-  public KnightsTour(int rows, int cols){
+  public KnightBoard(int rows, int cols){
     board = new KnightSquare[rows][cols];
     for(int i = 0; i < rows; i ++){
       for(int j = 0; j < cols; j ++){
@@ -173,7 +173,11 @@ public boolean solve(int lastkx, int lastky){
     return false;
     }
 }
+public int countSolutions(int lastkx, int lastky){
+  addKnight(lastkx,lastky);
+  return countSolutions(0,lastkx,lastky);
 
+}
   public int countSolutions(int so_far, int lastkx, int lastky){
     if(knight_counter == board.length * board[0].length){
 
@@ -195,15 +199,5 @@ public boolean solve(int lastkx, int lastky){
       }
       return so_far;
     }
-  }
-
- public static void main(String args[]){
-    KnightsTour nb = new KnightsTour(4,4);
-
-
-    System.out.println(nb.solve(0,0));
-
-    System.out.println(nb.toString());
-
   }
 }
