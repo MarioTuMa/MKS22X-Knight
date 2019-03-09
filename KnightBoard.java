@@ -53,9 +53,9 @@ public class KnightBoard{
     if(board[row][col].order==0){
       knight_counter++;
       board[row][col].setorder(1*knight_counter);
-      for(int i = 0; i < row + 4; i ++){
-        for(int j = 0; j < board[0].length; j ++){
-          if(attacks(i,j,row,col)&& !(i<0 || i>=board.length || j <0 || j>=board[0].length)){
+      for(int i = Math.max(row - 3,0); i < Math.min(row + 3,board.length - 1); i ++){
+        for(int j = Math.max(col - 3,0); j < Math.min(col + 3,board.length - 1); j ++){
+          if(attacks(i,j,row,col)){
             if(board[i][j].order==0){
               board[i][j].setSpacesLeft(board[i][j].spaces_left-1);
             }
@@ -200,4 +200,5 @@ public int countSolutions(int lastkx, int lastky){
       return so_far;
     }
   }
+  
 }
